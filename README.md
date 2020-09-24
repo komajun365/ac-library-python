@@ -1,5 +1,5 @@
 # ac-library-python
-仲間内で進める、ac-libralyのpython版を作ろうプロジェクトです。
+仲間内で進める、ac-libraryのpython版を作ろうプロジェクトです。
 https://github.com/atcoder/ac-library
 
 まだ何も決まっていませんが、
