@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "atcoder"
+version = "0.1.0"
+description = ""
+authors = ["Name <address@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.8.4"
+pytest = "^6.1.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
