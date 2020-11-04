@@ -1,7 +1,7 @@
 #  @param n `0 <= n`
 #  @return minimum non-negative `x` s.t. `n <= 2**x`
 def ceil_pow2(n: int):
-    if(n < 1):
+    if n < 1:
         return 0
     return (n-1).bit_length()
 
