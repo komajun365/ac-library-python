@@ -6,22 +6,22 @@ from tests.utils.random import randpair
 class TimeManager:
     def __init__(self, n):
         self.v = [-1] * n
-    
-    def action(self, l, r, time):
-        for i in range(l, r):
+
+    def action(self, left, right, time):
+        for i in range(left, right):
             self.v[i] = time
-    
-    def prod(self, l, r):
+
+    def prod(self, left, right):
         res = -1
-        for i in range(l, r):
+        for i in range(left, right):
             res = max(res, self.v[i])
         return res
 
 
 class S:
-    def __init__(self, l=0, r=0, time=0):
-        self.l = l
-        self.r = r
+    def __init__(self, left=0, right=0, time=0):
+        self.left = left
+        self.right = right
         self.time = time
 
 
@@ -30,29 +30,29 @@ class T:
         self.new_time = new_time
 
 
-def op_ss(l: S, r: S):
-    if l.l == -1:
-        return r
-    if r.l == -1:
-        return l
-    assert l.r == r.l
-    return S(l.l, r.r, max(l.time, r.time))
+def op_ss(left: S, right: S):
+    if left.left == -1:
+        return right
+    if right.left == -1:
+        return left
+    assert left.right == right.left
+    return S(left.left, right.right, max(left.time, right.time))
 
 
-def op_ts(l: T, r: S):
-    if l.new_time == -1:
-        return r
-    assert r.time < l.new_time
-    return S(r.l, r.r, l.new_time)
+def op_ts(left: T, right: S):
+    if left.new_time == -1:
+        return right
+    assert right.time < left.new_time
+    return S(right.left, right.right, left.new_time)
 
 
-def op_tt(l: T, r: T):
-    if l.new_time == -1:
-        return r
-    if r.new_time == -1:
-        return l
-    assert l.new_time > r.new_time
-    return l
+def op_tt(left: T, right: T):
+    if left.new_time == -1:
+        return right
+    if right.new_time == -1:
+        return left
+    assert left.new_time > right.new_time
+    return left
 
 
 def e_s():
@@ -91,25 +91,25 @@ def test_lazysegtree_naivetest_stress():
             now = 0
             for q in range(3000):
                 ty = random.randint(0, 3)
-                l, r = randpair(0, n)
+                left, right = randpair(0, n)
                 if ty == 0:
-                    res = seg0.prod(l, r)
-                    assert l == res.l
-                    assert r == res.r
-                    assert tm.prod(l, r) == res.time
+                    res = seg0.prod(left, right)
+                    assert left == res.left
+                    assert right == res.right
+                    assert tm.prod(left, right) == res.time
                 elif ty == 1:
-                    res = seg0.get(l)
-                    assert l == res.l
-                    assert l + 1 == res.r
-                    assert tm.prod(l, l + 1) == res.time
+                    res = seg0.get(left)
+                    assert left == res.left
+                    assert left + 1 == res.right
+                    assert tm.prod(left, left + 1) == res.time
                 elif ty == 2:
                     now += 1
-                    seg0.apply_lr(l, r, T(now))
-                    tm.action(l, r, now)
+                    seg0.apply_lr(left, right, T(now))
+                    tm.action(left, right, now)
                 elif ty == 3:
                     now += 1
-                    seg0.apply(l, T(now))
-                    tm.action(l, l + 1, now)
+                    seg0.apply(left, T(now))
+                    tm.action(left, left + 1, now)
                 else:
                     assert False
 
@@ -124,19 +124,19 @@ def test_lazysegtree_maxright_stress():
             now = 0
             for q in range(1000):
                 ty = random.randint(0, 2)
-                l, r = randpair(0, n)
+                left, right = randpair(0, n)
                 if ty == 0:
                     def maxright_g(s):
-                        if s.l == -1:
+                        if s.left == -1:
                             return True
-                        assert s.l == l
-                        assert s.time == tm.prod(l, s.r)
-                        return s.r <= r
-                    assert r == seg0.max_right(l, maxright_g)
+                        assert s.left == left
+                        assert s.time == tm.prod(left, s.right)
+                        return s.right <= right
+                    assert right == seg0.max_right(left, maxright_g)
                 else:
                     now += 1
-                    seg0.apply_lr(l, r, T(now))
-                    tm.action(l, r, now)
+                    seg0.apply_lr(left, right, T(now))
+                    tm.action(left, right, now)
 
 
 def test_lazysegtree_minleft_stress():
@@ -148,17 +148,17 @@ def test_lazysegtree_minleft_stress():
                 seg0.set(i, S(i, i+1, -1))
             now = 0
             for q in range(1000):
-                ty = random.randint(0,2)
-                l, r = randpair(0, n)
+                ty = random.randint(0, 2)
+                left, right = randpair(0, n)
                 if ty == 0:
                     def minleft_g(s):
-                        if s.l == -1:
+                        if s.left == -1:
                             return True
-                        assert s.r == r
-                        assert s.time == tm.prod(s.l, r)
-                        return l <= s.l
-                    assert l == seg0.min_left(r, minleft_g)
+                        assert s.right == right
+                        assert s.time == tm.prod(s.left, right)
+                        return left <= s.left
+                    assert left == seg0.min_left(right, minleft_g)
                 else:
                     now += 1
-                    seg0.apply_lr(l, r, T(now))
-                    tm.action(l, r, now)
+                    seg0.apply_lr(left, right, T(now))
+                    tm.action(left, right, now)
