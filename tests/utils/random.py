@@ -5,7 +5,7 @@ import random
 def randpair(lower, upper):
     assert upper - lower >= 1
     a, b = 0, 0
-    while a==b:
+    while a == b:
         a = random.randint(lower, upper)
         b = random.randint(lower, upper)
     if a > b:

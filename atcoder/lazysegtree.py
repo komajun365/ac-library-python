@@ -95,13 +95,13 @@ class LazySegTree:
         -------
         S
             self.__d[p]
-    prod(self, l, r)
+    prod(self, left, right)
         l番目～r-1番目の要素の演算結果
         Parameters
         ----------
-        l : int
-        r : int
-            0 <= l <= r < self.__n
+        left : int
+        right : int
+            0 <= left <= right < self.__n
         Returns
         -------
         S
@@ -122,25 +122,25 @@ class LazySegTree:
             写像を反映させる要素の番号
         f : F
             反映させたい写像
-    apply_lr(self, l, r, f)
+    apply_lr(self, left, right, f)
         ※本家ではapply関数にまとめているが、引数の数が異なるため本実装では分割
         l番目～r-1番目の要素に写像fを区間反映させる。
         （遅延要素として積み込む）
         Parameters
         ----------
-        l : int
-        r : int
-            0 <= l <= r < self.__n
+        left : int
+        right : int
+            0 <= left <= right < self.__n
         f : F
             反映させたい写像
-    max_right(self, l, g)
+    max_right(self, left, g)
         セグメントツリー上での二分探索結果を返却します。
-        lから始めて、右側に探索していく場合です。
+        leftから始めて、右側に探索していく場合です。
         ※詳細は公式ドキュメント参照
         Parameters
         ----------
-        l : int
-            0 <= l <= self.__n
+        left : int
+            0 <= left <= self.__n
             左側探索基準点
         g : function(S) -> bool
             g(e()) == Trueを満たす
@@ -149,14 +149,14 @@ class LazySegTree:
         int
             gが単調だとすれば、
             g(op(a[l], a[l + 1], ..., a[r - 1])) = true となる最大のr
-    min_left(self, r, g)
+    min_left(self, right, g)
         セグメントツリー上での二分探索結果を返却します。
-        rから始めて、←側に探索していく場合です。
+        rightから始めて、左側に探索していく場合です。
         ※詳細は公式ドキュメント参照
         Parameters
         ----------
-        r : int
-            0 <= r <= self.__n
+        right : int
+            0 <= right <= self.__n
             →側探索基準点
         g : function(S) -> bool
             g(e()) == Trueを満たす
@@ -215,31 +215,31 @@ class LazySegTree:
             self.__push(p >> i)
         return self.__d[p]
 
-    def prod(self, l, r):
-        assert (0 <= l) & (l <= r) & (r <= self.__n)
-        if l == r:
+    def prod(self, left, right):
+        assert (0 <= left) & (left <= right) & (right <= self.__n)
+        if left == right:
             return self.__e()
 
-        l += self.__size
-        r += self.__size
+        left += self.__size
+        right += self.__size
 
         for i in range(self.__log, 0, -1):
-            if((l >> i) << i) != l:
-                self.__push(l >> i)
-            if((r >> i) << i) != r:
-                self.__push(r >> i)
+            if((left >> i) << i) != left:
+                self.__push(left >> i)
+            if((right >> i) << i) != right:
+                self.__push(right >> i)
 
         sml = self.__e()
         smr = self.__e()
-        while l < r:
-            if l & 1:
-                sml = self.__op(sml, self.__d[l])
-                l += 1
-            if r & 1:
-                r -= 1
-                smr = self.__op(self.__d[r], smr)
-            l //= 2
-            r //= 2
+        while left < right:
+            if left & 1:
+                sml = self.__op(sml, self.__d[left])
+                left += 1
+            if right & 1:
+                right -= 1
+                smr = self.__op(self.__d[right], smr)
+            left //= 2
+            right //= 2
 
         return self.__op(sml, smr)
 
@@ -255,86 +255,86 @@ class LazySegTree:
         for i in range(1, self.__log+1):
             self.__update(p >> i)
 
-    def apply_lr(self, l, r, f):
-        assert (0 <= l) & (l <= r) & (r <= self.__n)
-        if l == r:
+    def apply_lr(self, left, right, f):
+        assert (0 <= left) & (left <= right) & (right <= self.__n)
+        if left == right:
             return
 
-        l += self.__size
-        r += self.__size
+        left += self.__size
+        right += self.__size
 
         for i in range(self.__log, 0, -1):
-            if((l >> i) << i) != l:
-                self.__push(l >> i)
-            if((r >> i) << i) != r:
-                self.__push((r-1) >> i)
+            if((left >> i) << i) != left:
+                self.__push(left >> i)
+            if((right >> i) << i) != right:
+                self.__push((right-1) >> i)
 
-        l2, r2 = l, r
-        while l < r:
-            if l & 1:
-                self.__all_apply(l, f)
-                l += 1
-            if r & 1:
-                r -= 1
-                self.__all_apply(r, f)
-            l //= 2
-            r //= 2
-        l, r = l2, r2
+        left2, right2 = left, right
+        while left < right:
+            if left & 1:
+                self.__all_apply(left, f)
+                left += 1
+            if right & 1:
+                right -= 1
+                self.__all_apply(right, f)
+            left //= 2
+            right //= 2
+        left, right = left2, right2
 
         for i in range(1, self.__log+1):
-            if((l >> i) << i) != l:
-                self.__update(l >> i)
-            if((r >> i) << i) != r:
-                self.__update((r-1) >> i)
+            if((left >> i) << i) != left:
+                self.__update(left >> i)
+            if((right >> i) << i) != right:
+                self.__update((right-1) >> i)
 
-    def max_right(self, l, g):
-        assert (0 <= l) & (l <= self.__n)
+    def max_right(self, left, g):
+        assert (0 <= left) & (left <= self.__n)
         assert g(self.__e())
-        if l == self.__n:
+        if left == self.__n:
             return self.__n
-        l += self.__size
+        left += self.__size
         for i in range(self.__log, 0, -1):
-            self.__push(l >> i)
+            self.__push(left >> i)
         sm = self.__e()
         while True:
-            while(l % 2 == 0):
-                l //= 2
-            if not g(self.__op(sm, self.__d[l])):
-                while l < self.__size:
-                    self.__push(l)
-                    l *= 2
-                    if g(self.__op(sm, self.__d[l])):
-                        sm = self.__op(sm, self.__d[l])
-                        l += 1
-                return l - self.__size
-            sm = self.__op(sm, self.__d[l])
-            l += 1
-            if(l & -l) == l:
+            while(left % 2 == 0):
+                left //= 2
+            if not g(self.__op(sm, self.__d[left])):
+                while left < self.__size:
+                    self.__push(left)
+                    left *= 2
+                    if g(self.__op(sm, self.__d[left])):
+                        sm = self.__op(sm, self.__d[left])
+                        left += 1
+                return left - self.__size
+            sm = self.__op(sm, self.__d[left])
+            left += 1
+            if(left & -left) == left:
                 break
         return self.__n
 
-    def min_left(self, r, g):
-        assert (0 <= r) & (r <= self.__n)
+    def min_left(self, right, g):
+        assert (0 <= right) & (right <= self.__n)
         assert g(self.__e())
-        if r == 0:
+        if right == 0:
             return 0
-        r += self.__size
+        right += self.__size
         for i in range(self.__log, 0, -1):
-            self.__push((r-1) >> i)
+            self.__push((right-1) >> i)
         sm = self.__e()
         while True:
-            r -= 1
-            while(r > 1) & (r % 2):
-                r //= 2
-            if not g(self.__op(self.__d[r], sm)):
-                while r < self.__size:
-                    self.__push(r)
-                    r = 2 * r + 1
-                    if g(self.__op(self.__d[r], sm)):
-                        sm = self.__op(self.__d[r], sm)
-                        r -= 1
-                return r + 1 - self.__size
-            sm = self.__op(self.__d[r], sm)
-            if(r & -r) == r:
+            right -= 1
+            while(right > 1) & (right % 2):
+                right //= 2
+            if not g(self.__op(self.__d[right], sm)):
+                while right < self.__size:
+                    self.__push(right)
+                    right = 2 * right + 1
+                    if g(self.__op(self.__d[right], sm)):
+                        sm = self.__op(self.__d[right], sm)
+                        right -= 1
+                return right + 1 - self.__size
+            sm = self.__op(self.__d[right], sm)
+            if(right & -right) == right:
                 break
         return 0
