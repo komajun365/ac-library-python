@@ -36,20 +36,6 @@ def test_convolution_mid():
     assert conv_naive(a, b, mod) == conv.convolution(a, b)
 
 
-def test_convolution_simplemod():
-    mod1 = 998244353
-    mod2 = 924844033
-    conv = Convolution(mod1)
-    a = [randint(0, NUMERIC_MAX_INT) for i in range(20)]
-    b = [randint(0, NUMERIC_MAX_INT) for i in range(20)]
-    assert conv_naive(a, b, mod1) == conv.convolution(a, b)
-
-    conv = Convolution(mod2)
-    a = [randint(0, NUMERIC_MAX_INT) for i in range(20)]
-    b = [randint(0, NUMERIC_MAX_INT) for i in range(20)]
-    assert conv_naive(a, b, mod2) == conv.convolution(a, b)
-
-
 def test_convolution_simpleint():
     mod1 = 998244353
     mod2 = 924844033
@@ -62,3 +48,19 @@ def test_convolution_simpleint():
     a = [randint(0, NUMERIC_MAX_INT) % mod2 for i in range(20)]
     b = [randint(0, NUMERIC_MAX_INT) % mod2 for i in range(20)]
     assert conv_naive(a, b, mod2) == conv.convolution(a, b)
+
+
+def test_convolution_conv641():
+    mod = 641  # 641 = 128 * 5 + 1
+    conv = Convolution(mod)
+    a = [randint(0, mod-1) for i in range(64)]
+    b = [randint(0, mod-1) for i in range(65)]
+    assert conv_naive(a, b, mod) == conv.convolution(a, b)
+
+
+def test_convolution_conv18433():
+    mod = 18433  # 18433 = 2048 * 9 + 1
+    conv = Convolution(mod)
+    a = [randint(0, mod-1) for i in range(1024)]
+    b = [randint(0, mod-1) for i in range(1025)]
+    assert conv_naive(a, b, mod) == conv.convolution(a, b)

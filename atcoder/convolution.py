@@ -91,7 +91,7 @@ class Convolution:
                 ie %= self._mod
 
             now = 1
-            for i in range(cnt2 - 2):
+            for i in range(cnt2 - 1):
                 self._sum_e[i] = es[i] * now % self._mod
                 now *= ies[i]
                 now %= self._mod
@@ -108,7 +108,7 @@ class Convolution:
                     a[i + offset] = (left + right) % self._mod
                     a[i + offset + p] = (left - right) % self._mod
 
-                now *= self._sum_e[(~s & -~s).bit_length() - 1]
+                now *= self._sum_e[bsf(~s)]
                 now %= self._mod
 
     def _butterfly_inv(self, a):
@@ -131,7 +131,7 @@ class Convolution:
                 ie %= self._mod
 
             now = 1
-            for i in range(cnt2 - 2):
+            for i in range(cnt2 - 1):
                 self._sum_ie[i] = ies[i] * now % self._mod
                 now *= es[i]
                 now %= self._mod
@@ -149,7 +149,7 @@ class Convolution:
                     a[i + offset + p] = (
                         (self._mod + left - right) * inow % self._mod
                     )
-                inow *= self._sum_ie[(~s & -~s).bit_length() - 1]
+                inow *= self._sum_ie[bsf(~s)]
                 inow %= self._mod
 
     def convolution(self, a, b):

@@ -60,3 +60,10 @@ def test_primitive_root_template():
     assert is_primitive_root(324013369, primitive_root(324013369))
     assert is_primitive_root(831143041, primitive_root(831143041))
     assert is_primitive_root(1685283601, primitive_root(1685283601))
+
+
+def test_primitive_root():
+    for i in range(1000):
+        x = NUMERIC_MAX_INT - i
+        if is_prime(x):
+            assert is_primitive_root(x, primitive_root(x))
