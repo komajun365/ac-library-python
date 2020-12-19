@@ -7,13 +7,12 @@ from tests.utils.random import randpair
 def test_maxflow_zero():
     g1 = MaxFlow()
     g2 = MaxFlow(0)
-    g1, g2
 
 
 def test_maxflow_assign():
     g = MaxFlow()
     g = MaxFlow(10)
-    g
+
 
 # def edge_eq(expect, actual):
 #     assert expect == actual
@@ -152,12 +151,12 @@ def test_maxflow_stress():
         for e_from, e_to, e_cap, e_flow in g.edges():
             v_flow[e_from] -= e_flow
             v_flow[e_to] += e_flow
-            if cut[e_from] and (not cut[e_to]):
+            if cut[e_from] and not cut[e_to]:
                 dual += e_cap
         assert flow == dual
         assert flow * -1 == v_flow[s]
         assert flow == v_flow[t]
         for i in range(n):
-            if(i == s) or (i == t):
+            if i == s or i == t:
                 continue
             assert 0 == v_flow[i]

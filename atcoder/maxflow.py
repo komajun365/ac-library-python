@@ -142,8 +142,8 @@ class MaxFlow:
         assert 0 <= to < self._n
         assert 0 <= cap
         m = len(self._pos)
-        self._pos.append([from_, len(self._g[from_])])
         from_id = len(self._g[from_])
+        self._pos.append([from_, from_id])
         to_id = len(self._g[to])
         if from_ == to:
             to_id += 1
@@ -160,9 +160,7 @@ class MaxFlow:
 
     def edges(self):
         m = len(self._pos)
-        result = []
-        for i in range(m):
-            result.append(self.get_edge(i))
+        result = [self.get_edge(i) for i in range(m)]
         return result
 
     def change_edge(self, i, new_cap, new_flow):
@@ -178,14 +176,14 @@ class MaxFlow:
         level = [-1] * self._n
         level[s] = 0
         que = [s]
-        while(que):
+        while que:
             next_que = []
             for v in que:
                 for to, rev, cap in self._g[v]:
-                    if(cap == 0) or (level[to] >= 0):
+                    if cap == 0 or level[to] >= 0:
                         continue
                     level[to] = level[v] + 1
-                    if(to == t):
+                    if to == t:
                         return level
                     next_que.append(to)
             que, next_que = next_que, que
@@ -197,9 +195,9 @@ class MaxFlow:
         assert s != t
 
         flow = 0
-        while(flow < flow_limit):
+        while flow < flow_limit:
             level = self._flow_bfs(s, t)
-            if(level[t] == -1):
+            if level[t] == -1:
                 break
 
             iterator = [0] * self._n
@@ -208,12 +206,12 @@ class MaxFlow:
 
             in_[t] = flow_limit - flow
             route = [t]
-            while(route):
+            while route:
                 v = route[-1]
-                if(in_[v] == out[v]) and (v == t):
+                if in_[v] == out[v] and v == t:
                     flow += out[t]
                     return flow
-                if(v == s) or (in_[v] == out[v]):
+                if v == s or in_[v] == out[v]:
                     route.pop()
                     w = route[-1]
                     flow_vw = in_[v]
@@ -226,9 +224,9 @@ class MaxFlow:
 
                 for i in range(iterator[v], len(self._g[v])):
                     to, rev, cap = self._g[v][i]
-                    if((level[to] == -1)
-                       or (level[v] <= level[to])
-                       or (self._g[to][rev][2] == 0)):
+                    if(level[to] == -1
+                       or level[v] <= level[to]
+                       or self._g[to][rev][2] == 0):
                         continue
                     in_[to] = min(in_[v]-out[v], self._g[to][rev][2])
                     out[to] = 0
@@ -238,8 +236,8 @@ class MaxFlow:
                 else:
                     iterator[v] = len(self._g[v])
                     route.pop()
-                    if(v == t):
-                        if(out[t] == 0):
+                    if v == t:
+                        if out[t] == 0:
                             return flow
                         flow += out[t]
                         continue
@@ -257,11 +255,11 @@ class MaxFlow:
         visited = [False] * self._n
         visited[s] = True
         que = [s]
-        while(que):
+        while que:
             next_que = []
             for p in que:
                 for to, rev, cap in self._g[p]:
-                    if(cap > 0) and (not visited[to]):
+                    if cap > 0 and not visited[to]:
                         visited[to] = True
                         next_que.append(to)
             que, next_que = next_que, que
