@@ -100,7 +100,7 @@ def floor_sum(n, m, a, b):
     ans : int
     """
     ans = 0
-    while(True):
+    while True:
         if a >= m:
             ans += (n - 1) * n * (a // m) // 2
             a %= m
