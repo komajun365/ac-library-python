@@ -37,6 +37,42 @@ def is_prime(n):
     return True
 
 
+def inv_gcd(a, b):
+    """
+    g = gcd(a, b), xa = g (mod b), 0 <= x < b/g
+    を満たすような[g, x]を計算する。
+    特にg = gcd(a, b) = 1 の時、
+    xはbを法としたときのaの逆元である。
+    a = 0 の場合は[b, 0]を返却する。
+
+    Parameters
+    ----------
+    a : int
+    b : int
+        b >= 1
+
+    Returns
+    -------
+    [s, m0] : list
+    """
+    a %= b
+    if a == 0:
+        return [b, 0]
+
+    s, t = b, a
+    m0, m1 = 0, 1
+    while t:
+        u = s // t
+        s -= t * u
+        m0 -= m1 * u
+        s, t = t, s
+        m0, m1 = m1, m0
+
+    if m0 < 0:
+        m0 += b // s
+    return [s, m0]
+
+
 def primitive_root(m):
     """
     整数mの最小原始根を計算する
