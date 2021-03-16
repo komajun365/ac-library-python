@@ -8,10 +8,17 @@ from atcoder.math_acl import inv_mod, crt, floor_sum
 from atcoder.internal_csr import Csr
 from atcoder.mincostflow import MinCostFlow
 from atcoder.segtree import SegTree
+<<<<<<< HEAD
 from atcoder.dsu import DSU
+=======
+>>>>>>> origin
 
 __all__ = [
     'Sample', 'ceil_pow2', 'bsf', 'LazySegTree', 'is_prime', 'inv_gcd',
     'primitive_root', 'Convolution', 'MaxFlow', 'inv_mod', 'crt', 'floor_sum',
+<<<<<<< HEAD
     'Csr', 'MinCostFlow', 'SegTree', 'DSU',
+=======
+    'Csr', 'MinCostFlow', 'SegTree'
+>>>>>>> origin
 ]
