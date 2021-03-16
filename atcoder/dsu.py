@@ -11,7 +11,7 @@ class DSU:
     ----------
     _n : int
         要素数
-    parent_or_size : list
+    _parent_or_size : list
         根のインデックス、あるいは素集合のsizeの-1倍を要素に持つ
 
     Methods
@@ -25,6 +25,10 @@ class DSU:
         ----------
         a, b : int
             結合対象の要素
+        Returns
+        -------
+        x : int
+            新たな代表元
 
     same(self, a, b)
         同じ集合に属するか判定する
@@ -32,6 +36,10 @@ class DSU:
         ----------
         a, b : int
             判定対象の要素
+        Returns
+        -------
+        bool
+            同じ集合であればTrue
 
     leader(self, a)
         根を返却する
@@ -39,6 +47,10 @@ class DSU:
         ----------
         a : int
             根の探索元
+        Returns
+        -------
+        int
+            aが属する集合の代表元
 
     size(self, a)
         素集合の要素数を返却する
@@ -46,15 +58,22 @@ class DSU:
         ----------
         a : int
             対象の要素
+        Returns
+        -------
+        int
+            aが属する集合の大きさ
 
     groups(self)
         すべての素集合を要素に持つリスト(二重リスト)を返却する
-
+        Returns
+        -------
+        list
+            素集合を枚挙したリスト(「intを要素に持つリスト」のリスト)
     '''
 
     def __init__(self, n):
         self._n = n
-        self.parent_or_size = [-1] * n
+        self._parent_or_size = [-1] * n
 
     def merge(self, a, b):
         assert 0 <= a < self._n, "引数の値が要素数未満ではありません。"
@@ -66,11 +85,11 @@ class DSU:
             return x
 
         # 小さいグループを大きなグループにmergeするため
-        if -self.parent_or_size[x] < -self.parent_or_size[y]:
+        if -self._parent_or_size[x] < -self._parent_or_size[y]:
             x, y = y, x
 
-        self.parent_or_size[x] += self.parent_or_size[y]
-        self.parent_or_size[y] = x  # 小さいグループのリーダーのリーダーを設定
+        self._parent_or_size[x] += self._parent_or_size[y]
+        self._parent_or_size[y] = x  # 小さいグループのリーダーのリーダーを設定
 
         return x
 
@@ -83,18 +102,18 @@ class DSU:
     def leader(self, a):
         assert 0 <= a < self._n, "引数の値が要素数未満ではありません。"
 
-        if self.parent_or_size[a] < 0:
+        if self._parent_or_size[a] < 0:
             return a
 
         # 直接returnせず、リーダーの情報を更新
-        self.parent_or_size[a] = self.leader(self.parent_or_size[a])
+        self._parent_or_size[a] = self.leader(self._parent_or_size[a])
 
-        return self.parent_or_size[a]
+        return self._parent_or_size[a]
 
     def size(self, a):
         assert 0 <= a < self._n, "引数の値が要素数未満ではありません。"
 
-        return -self.parent_or_size[self.leader(a)]
+        return -self._parent_or_size[self.leader(a)]
 
     def groups(self):
         leader_ls = [self.leader(i) for i in range(self._n)]
