@@ -8,9 +8,10 @@ from atcoder.math_acl import inv_mod, crt, floor_sum
 from atcoder.internal_csr import Csr
 from atcoder.mincostflow import MinCostFlow
 from atcoder.segtree import SegTree
+from atcoder.fenwicktree import FenwickTree
 
 __all__ = [
     'Sample', 'ceil_pow2', 'bsf', 'LazySegTree', 'is_prime', 'inv_gcd',
     'primitive_root', 'Convolution', 'MaxFlow', 'inv_mod', 'crt', 'floor_sum',
-    'Csr', 'MinCostFlow', 'SegTree'
+    'Csr', 'MinCostFlow', 'SegTree', 'FenwickTree',
 ]
