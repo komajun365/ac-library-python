@@ -10,9 +10,10 @@ from atcoder.mincostflow import MinCostFlow
 from atcoder.segtree import SegTree
 from atcoder.internal_scc import InternalScc
 from atcoder.scc import Scc
+from atcoder.dsu import DSU
 
 __all__ = [
     'Sample', 'ceil_pow2', 'bsf', 'LazySegTree', 'is_prime', 'inv_gcd',
     'primitive_root', 'Convolution', 'MaxFlow', 'inv_mod', 'crt', 'floor_sum',
-    'Csr', 'MinCostFlow', 'SegTree', 'InternalScc', 'Scc'
+    'Csr', 'MinCostFlow', 'SegTree', 'DSU', 'InternalScc', 'Scc',
 ]
